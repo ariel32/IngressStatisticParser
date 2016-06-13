@@ -1,0 +1,30 @@
+ALL TIME | MONTH | WEEK | NOW
+Unique Portals Visited 3,281
+Portals Discovered 172
+XM Collected 115,699,013 XM
+Distance Walked 2,501 km
+Resonators Deployed 70.5-12
+Links Created 13,588
+Control Fields Created 6,565
+Mind Units Captured 33,518 MUs
+Longest Link Ever Created 150 km
+Largest Control Field 4,024 MUs
+XM Recharged 27,411,001 XM
+Portals Captured 8.317
+Unique Portals Captured 1,706
+Mods Deployed 5.519
+Resonators Destroyed 48.003
+Portals Neutralized 6,891
+Enemy Links Destroyed 10,885
+Enemy Control Fields Destroyed 5,686
+Max Time Portal Held 123 days
+Max Time Link Maintained 76 days
+Max Link Length x Days 1,596 km-days
+Max Time Field Held 76 days
+Largest Field MUs x Days 28,149 MU-days
+Unique Missions Completed 172
+Mission Day(s) Attended 1
+Hacks 43,045
+Glyph Hack Points 50,517
+Longest Hacking Streak 188 days
+Agents Successfully Recruit 4
