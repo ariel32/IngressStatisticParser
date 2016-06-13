@@ -1,4 +1,5 @@
 doTesseract <- function(image) {
+  library("EBImage")
   img <- readImage(image)
   FRACTION = ifelse(mean(imageData(img[175:200,80:130,3])) > mean(imageData(img[175:200,80:130,2])), "RES", "ENL")
   
@@ -48,7 +49,7 @@ doTesseract <- function(image) {
   LFMD <- as.numeric(gsub("[^0-9]",replacement = "", res[grepl("Largest Field MUs x Days", res)]))
   # Missions
   UMC <- as.numeric(gsub("[^0-9]",replacement = "", res[grepl("Unique Missions Completed", res)]))
-  MDA <- as.numeric(gsub("[^0-9]",replacement = "", res[grepl("Mission Day(s) Attended", res)]))
+  MDA <- as.numeric(gsub("[^0-9]",replacement = "", res[grepl("Mission Day", res)]))
   # Resource Gathering
   H <- as.numeric(gsub("[^0-9]",replacement = "", res[grepl("Hacks", res)]))
   GHP <- as.numeric(gsub("[^0-9]",replacement = "", res[grepl("Glyph Hack Points", res)]))
@@ -58,12 +59,33 @@ doTesseract <- function(image) {
   
   
   l <- list(name,FRACTION,AP,LVL,UPV,PD,XMC,DW,RDep,LC,CFC,MUC,LLEC,LCF,XMR,PC,UPC,MD,RDes,PN,ELD,ECFD,MTPH,MTLM,MLLD,MTFH,LFMD,UMC,MDA,H,GHP,LHS,ASR)
-  df <- as.data.frame(rbind(ifelse(is.na(sapply(l,"[",1)),0,sapply(l,"[",1))))
+  l <- ifelse(is.na(sapply(l,"[",1)),0,sapply(l,"[",1))
+  df <- data.frame(rbind(l), stringsAsFactors=FALSE); df[,3:33] <- as.numeric(df[,3:33])
   names(df) <- c("name","FRACTION","AP","LVL","UPV","PD","XMC","DW","RDep","LC","CFC","MUC","LLEC","LCF","XMR","PC","UPC","MD","RDes","PN","ELD","ECFD","MTPH",
                  "MTLM","MLLD","MTFH","LFMD","UMC","MDA","H","GHP","LHS","ASR")
-  return(df)
-  
   file.remove(c("res.txt","temp.png"))
+  return(df)
 }
 
-do.call(rbind, lapply(dir("profiles/", full.names = T), doTesseract))
+doTesseract("test.profiles/8.png")
+
+df <- do.call(rbind, lapply(dir("test.profiles/", full.names = T), doTesseract))
+
+d.st <- df[,3:33]/df$AP; row.names(d.st) <- df$name
+
+clusters <- hclust(dist(d.st))
+plot(clusters, labels = df$name)
+
+library("ade4"); library("factoextra")
+res.pca <- dudi.pca(d.st, scannf = FALSE); s.corcircle(res.pca$co, sub = "", possub = "topleft")
+
+fviz_pca_biplot(res.pca, geom = "text") + theme_minimal()
+fviz_pca_biplot(res.pca)
+
+fviz_pca_var(res.pca, col.var="contrib") +
+  scale_color_gradient2(low="white", mid="blue", 
+                        high="red", midpoint=50) + theme_minimal()
+
+
+FRACTION <- as.factor(df$FRACTION)
+fviz_pca_ind(res.pca, habillage = FRACTION, addEllipses = TRUE, ellipse.level = 0.68) + theme_minimal()
